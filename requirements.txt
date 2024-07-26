@@ -1,0 +1,10 @@
+pandas
+seaborn
+scikit-learn
+git+https://github.com/sigmadream/koreanize-matplotlib.git
+joblib
+konlpy
+ipykernel
+flask
+
+#pip install -r requirements.txt
