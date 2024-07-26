@@ -32,15 +32,29 @@ def lt_transform(review):
      return test_matrix
 
 @app.route("/predict", methods=["GET", "POST"]) 
+
 def npl_predict(): 
      if request.method == "GET":
           return render_template("predict.html")
      else:
           review = request.form["review"]
-          return render_template("predict_result.html", review=review)
+          review_matrix = lt_transform(review)
+          review_result = model_lr.predict(review_matrix)[0]
+          review_result = "긍정" if review_result else "부정"
+          result = {
+               "review" : review,
+               "review_result" : review_result
+          }
+          return render_template("predict_result.html", review=result)
 
-#method는 from flask의 request에 의해 사용할 수 있는 것임
+#form["review"] 는 키 처럼 생각하면 됨
+#method는 from flask의 request에 의해 사용할 수 있는 것 - predict의 <textarea class="form-control" rows="5" name="review"></textarea>와 매칭
+#post는- <form action="/predict" method="post">와 매칭해서 동작
 #get으로 들어오는지 post로 들어오는지 알 수 없기 때문에 판단해줄 context가 필요함
+#result 받아서, predict_result.html 에서 받았는데 그걸 받아줄 애가 있어야지, html의 {{review}}
+#review=result 키와 밸류의 매칭처럼 생각하면 됨
+#model_lr.predict(review_matrix)[0]은 1아니면 0의 값인데 array 형태라서 빼내줄려고 [0]으로 정해주는거임
+#A if 조건(참(1)이면 A 거짓(0)이면 B) else B
 
 @app.route("/")
 def index():
